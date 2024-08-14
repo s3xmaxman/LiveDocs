@@ -14,6 +14,7 @@ const Home = async () => {
   }
 
   const document = [];
+
   return (
     <main className="home-container">
       <Header className="sticky left-0 ">

@@ -59,7 +59,7 @@ export const createDocument = async ({
  * @returns {Promise<Object>} 取得したルームの情報
  * @throws {Error} アクセス権がない場合、またはルーム取得中にエラーが発生した場合
  */
-export const getDocuments = async ({
+export const getDocument = async ({
   roomId,
   userId,
 }: {
@@ -78,6 +78,24 @@ export const getDocuments = async ({
     return parseStringify(room);
   } catch (error) {
     console.log(`Error happened while getting a room: ${error}`);
+  }
+};
+
+/**
+ * ドキュメントを取得する非同期関数
+ *
+ * この関数は、指定されたメールアドレスを使用してユーザーが所有するルームのリストを取得します。
+ *
+ * @param {string} email - ルームを取得するユーザーのメールアドレス
+ * @returns {Promise<Object>} 取得したルームのリスト
+ * @throws {Error} ルーム取得中にエラーが発生した場合
+ */
+export const getDocuments = async (email: string) => {
+  try {
+    const rooms = await liveblocks.getRooms({ userId: email });
+    return parseStringify(rooms);
+  } catch (error) {
+    console.log(`Error happened while getting rooms: ${error}`);
   }
 };
 
