@@ -32,7 +32,7 @@ export const getAccessType = (userType: UserType) => {
  * タイムスタンプを人間が読みやすい形式に変換します。
  *
  * @param timestamp - ISO 8601形式のタイムスタンプ（例: "2023-10-01T12:00:00Z"）
- * @returns 人間が読みやすい時間の経過（例: "2 days ago", "Just now"）
+ * @returns 人間が読みやすい時間の経過（例: "2日前", "たった今"）
  * @throws 無効なタイムスタンプの場合、エラーをスローします。
  */
 export const dateConverter = (timestamp: string): string => {
@@ -48,15 +48,15 @@ export const dateConverter = (timestamp: string): string => {
 
   switch (true) {
     case diffInDays > 7:
-      return `${Math.floor(diffInDays / 7)} weeks ago`;
+      return `${Math.floor(diffInDays / 7)}週間前`;
     case diffInDays >= 1 && diffInDays <= 7:
-      return `${Math.floor(diffInDays)} days ago`;
+      return `${Math.floor(diffInDays)}日前`;
     case diffInHours >= 1:
-      return `${Math.floor(diffInHours)} hours ago`;
+      return `${Math.floor(diffInHours)}時間前`;
     case diffInMinutes >= 1:
-      return `${Math.floor(diffInMinutes)} minutes ago`;
+      return `${Math.floor(diffInMinutes)}分前`;
     default:
-      return "Just now";
+      return "たった今";
   }
 };
 
