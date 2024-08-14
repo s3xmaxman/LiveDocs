@@ -80,3 +80,29 @@ export const getDocuments = async ({
     console.log(`Error happened while getting a room: ${error}`);
   }
 };
+
+/**
+ * ドキュメントを更新する非同期関数
+ *
+ * この関数は、指定されたルームIDと新しいタイトルを使用してルームのメタデータを更新します。
+ *
+ * @param {string} roomId - 更新するルームのID
+ * @param {string} title - 新しいタイトル
+ * @returns {Promise<Object>} 更新されたルームの情報
+ * @throws {Error} ルーム更新中にエラーが発生した場合
+ */
+export const updateDocument = async (roomId: string, title: string) => {
+  try {
+    const update = await liveblocks.updateRoom(roomId, {
+      metadata: {
+        title,
+      },
+    });
+
+    revalidatePath(`/documents/${roomId}`);
+
+    return parseStringify(update);
+  } catch (error) {
+    console.log(`Error happened while updating a room: ${error}`);
+  }
+};
