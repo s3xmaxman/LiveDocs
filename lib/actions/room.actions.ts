@@ -46,3 +46,37 @@ export const createDocument = async ({
     console.log(`Error happened while creating a room: ${error}`);
   }
 };
+
+/**
+ * ドキュメントを取得する非同期関数
+ *
+ * この関数は、指定されたルームIDとユーザーIDを使用してルームの情報を取得します。
+ * ユーザーがルームにアクセスできるかどうかを確認し、アクセス権がない場合はエラーをスローします。
+ *
+ * @param {Object} params - ドキュメント取得に必要なパラメータ
+ * @param {string} params.roomId - 取得するルームのID
+ * @param {string} params.userId - ルームにアクセスするユーザーのID
+ * @returns {Promise<Object>} 取得したルームの情報
+ * @throws {Error} アクセス権がない場合、またはルーム取得中にエラーが発生した場合
+ */
+export const getDocuments = async ({
+  roomId,
+  userId,
+}: {
+  roomId: string;
+  userId: string;
+}) => {
+  try {
+    const room = await liveblocks.getRoom(roomId);
+
+    const hasAccess = Object.keys(room.usersAccesses).includes(userId);
+
+    if (!hasAccess) {
+      throw new Error("You don't have access to this room");
+    }
+
+    return parseStringify(room);
+  } catch (error) {
+    console.log(`Error happened while getting a room: ${error}`);
+  }
+};
