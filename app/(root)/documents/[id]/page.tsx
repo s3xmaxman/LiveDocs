@@ -5,9 +5,9 @@ import React from "react";
 
 const Document = () => {
   return (
-    <div className="flex w-full flex-col items-center">
+    <main className="flex w-full flex-col items-center">
       <CollaborativeRoom />
-    </div>
+    </main>
   );
 };
 

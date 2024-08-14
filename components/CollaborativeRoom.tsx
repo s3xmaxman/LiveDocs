@@ -8,6 +8,7 @@ import {
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Header from "./Header";
 import { Editor } from "./editor/Editor";
+import ActiveCollaborators from "./ActiveCollaborators";
 
 const CollaborativeRoom = () => {
   return (
@@ -17,6 +18,9 @@ const CollaborativeRoom = () => {
           <Header>
             <div className="flex w-fit items-center justify-center gap-2">
               <p className="document-title">this is fake title</p>
+            </div>
+            <div className="flex w-full flex-1 justify-end gap-2 sm:gap-3">
+              <ActiveCollaborators />
             </div>
             <SignedOut>
               <SignInButton />
