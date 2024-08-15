@@ -178,3 +178,43 @@ export const updateDocumentAccess = async ({
     console.log(`Error happened while updating a room: ${error}`);
   }
 };
+
+/**
+ * コラボレーターを削除する非同期関数
+ *
+ * この関数は、指定されたルームIDとメールアドレスを使用して、
+ * ルームからコラボレーターを削除します。
+ * 自分自身を削除しようとした場合はエラーをスローします。
+ *
+ * @param {Object} params - コラボレーター削除に必要なパラメータ
+ * @param {string} params.roomId - コラボレーターを削除するルームのID
+ * @param {string} params.email - 削除するコラボレーターのメールアドレス
+ * @returns {Promise<Object>} 更新されたルームの情報
+ * @throws {Error} コラボレーター削除中にエラーが発生した場合
+ */
+export const removeCollaborator = async ({
+  roomId,
+  email,
+}: {
+  roomId: string;
+  email: string;
+}) => {
+  try {
+    const room = await liveblocks.getRoom(roomId);
+
+    if (room.metadata.email === email) {
+      throw new Error("You cannot remove yourself from the document");
+    }
+
+    const updatedRoom = await liveblocks.updateRoom(roomId, {
+      usersAccesses: {
+        [email]: null,
+      },
+    });
+
+    revalidatePath(`/documents/${roomId}`);
+    return parseStringify(updatedRoom);
+  } catch (error) {
+    console.log(`Error happened while removing a collaborator: ${error}`);
+  }
+};

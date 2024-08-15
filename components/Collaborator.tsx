@@ -3,7 +3,10 @@ import { useState } from "react";
 import Image from "next/image";
 import UserTypeSelector from "./UserTypeSelector";
 import { Button } from "./ui/button";
-import { updateDocumentAccess } from "@/lib/actions/room.actions";
+import {
+  removeCollaborator,
+  updateDocumentAccess,
+} from "@/lib/actions/room.actions";
 
 const Collaborator = ({
   roomId,
@@ -18,7 +21,7 @@ const Collaborator = ({
 
   const [loading, setLoading] = useState(false);
 
-  const shareDocument = async (type: string) => {
+  const shareDocumentHandler = async (type: string) => {
     setLoading(true);
 
     await updateDocumentAccess({
@@ -31,7 +34,13 @@ const Collaborator = ({
     setLoading(false);
   };
 
-  const removeCollaborator = async (email: string) => {};
+  const removeCollaboratorHandler = async (email: string) => {
+    setLoading(true);
+
+    await removeCollaborator({ roomId, email });
+
+    setLoading(false);
+  };
 
   return (
     <li className="flex items-center justify-between gap-2 py-3">
@@ -63,11 +72,11 @@ const Collaborator = ({
           <UserTypeSelector
             userType={userType as UserType}
             setUserType={setUserType || "viewer"}
-            onClickHandler={shareDocument}
+            onClickHandler={shareDocumentHandler}
           />
           <Button
             type="button"
-            onClick={() => removeCollaborator(collaborator.email)}
+            onClick={() => removeCollaboratorHandler(collaborator.email)}
           >
             削除
           </Button>
