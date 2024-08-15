@@ -69,6 +69,7 @@ const ShareModal = ({
             ドキュメントを閲覧および編集できるユーザーを選択してください
           </DialogDescription>
         </DialogHeader>
+
         <Label htmlFor="email" className="mt-6 text-blue-100">
           メールアドレス
         </Label>
@@ -76,9 +77,10 @@ const ShareModal = ({
           <div className="flex flex-1 rounded-md bg-dark-400">
             <Input
               id="email"
-              placeholder="メールアドレス"
+              placeholder="Enter email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="share-input"
             />
             <UserTypeSelector userType={userType} setUserType={setUserType} />
           </div>
@@ -88,7 +90,7 @@ const ShareModal = ({
             className="gradient-blue flex h-full gap-1 px-5"
             disabled={loading}
           >
-            {loading ? "送信中..." : "招待"}
+            {loading ? "送信中" : "招待"}
           </Button>
         </div>
 
