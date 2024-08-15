@@ -12,6 +12,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
 import Image from "next/image";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import UserTypeSelector from "./UserTypeSelector";
 
 const ShareModal = ({
   roomId,
@@ -53,6 +56,20 @@ const ShareModal = ({
             ドキュメントを閲覧および編集できるユーザーを選択してください
           </DialogDescription>
         </DialogHeader>
+        <Label htmlFor="email" className="mt-6 text-blue-100">
+          メールアドレス
+        </Label>
+        <div className="flex items-center gap-3">
+          <div className="flex flex-1 rounded-md bg-dark-400">
+            <Input
+              id="email"
+              placeholder="メールアドレス"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <UserTypeSelector userType={userType} setUserType={setUserType} />
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
