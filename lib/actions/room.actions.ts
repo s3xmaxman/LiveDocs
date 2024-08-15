@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { title } from "process";
 import { liveblocks } from "../liveblocks";
 import { revalidatePath } from "next/cache";
-import { parseStringify } from "../utils";
+import { getAccessType, parseStringify } from "../utils";
 
 /**
  * ドキュメントを作成する非同期関数
@@ -120,6 +120,60 @@ export const updateDocument = async (roomId: string, title: string) => {
     revalidatePath(`/documents/${roomId}`);
 
     return parseStringify(update);
+  } catch (error) {
+    console.log(`Error happened while updating a room: ${error}`);
+  }
+};
+
+/**
+ * ドキュメントのアクセス権を更新する非同期関数
+ *
+ * この関数は、指定されたルームIDとメールアドレスを使用して、
+ * ユーザーのアクセス権を更新し、通知を送信します。
+ *
+ * @param {Object} params - アクセス権更新に必要なパラメータ
+ * @param {string} params.roomId - 更新するルームのID
+ * @param {string} params.email - アクセス権を更新するユーザーのメールアドレス
+ * @param {string} params.userType - ユーザーの新しいアクセス権のタイプ
+ * @param {Object} params.updatedBy - アクセス権を更新したユーザーの情報
+ * @returns {Promise<Object>} 更新されたルームの情報
+ * @throws {Error} アクセス権更新中にエラーが発生した場合
+ */
+export const updateDocumentAccess = async ({
+  roomId,
+  email,
+  userType,
+  updatedBy,
+}: ShareDocumentParams) => {
+  try {
+    const usersAccesses: RoomAccesses = {
+      [email]: getAccessType(userType) as AccessType,
+    };
+
+    const room = await liveblocks.updateRoom(roomId, {
+      usersAccesses,
+    });
+
+    if (room) {
+      const notificationId = nanoid();
+
+      await liveblocks.triggerInboxNotification({
+        userId: email,
+        kind: "$documentAccess",
+        subjectId: notificationId,
+        activityData: {
+          userType,
+          title: `あなたは${updatedBy.name}によってドキュメントへの${userType}アクセスが付与されました`,
+          updatedBy: updatedBy.name,
+          avatar: updatedBy.avatar,
+          email: updatedBy.email,
+        },
+        roomId,
+      });
+    }
+
+    revalidatePath(`/documents/${roomId}`);
+    return parseStringify(room);
   } catch (error) {
     console.log(`Error happened while updating a room: ${error}`);
   }
