@@ -4,6 +4,7 @@ import { title } from "process";
 import { liveblocks } from "../liveblocks";
 import { revalidatePath } from "next/cache";
 import { getAccessType, parseStringify } from "../utils";
+import { redirect } from "next/navigation";
 
 /**
  * ドキュメントを作成する非同期関数
@@ -222,6 +223,8 @@ export const removeCollaborator = async ({
 export const deleteDocument = async (roomId: string) => {
   try {
     await liveblocks.deleteRoom(roomId);
+    revalidatePath(`/`);
+    redirect(`/`);
   } catch (error) {
     console.log(`Error happened while deleting a room: ${error}`);
   }
